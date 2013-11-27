@@ -29,6 +29,10 @@ public class FluidH2O extends Fluid {
 		specificIsochoricHeatCapacity = 0;
 		specificVolume = 0;
 		temperature = 0;
+		quality = -1;
+		thermalConductivity = 0;
+		dynamicViscosity = 0;
+		region = 0;
 		return this;
 	}
 
