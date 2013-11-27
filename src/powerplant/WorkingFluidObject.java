@@ -30,4 +30,9 @@ public abstract class WorkingFluidObject {
 	 * @return The output fluid object
 	 */
 	public abstract Fluid getWorkingFluidOutput();
+	/**
+	 * Returns the solution state of the object.
+	 * @return boolean solution state.
+	 */
+	public abstract boolean isSolved();
 }

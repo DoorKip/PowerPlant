@@ -50,4 +50,10 @@ public class Boiler extends GasHeatExchanger{
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
+	public boolean isSolved() {
+		//TODO Implement isSolved in powerplant.ghe.Boiler
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
 }

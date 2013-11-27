@@ -47,7 +47,7 @@ public class FluidH2O extends Fluid {
 				if (specificInternalEnergy == 0){if(calcSpecificInternalEnergy()){changed = true;}}
 				if (specificIsobaricHeatCapacity == 0){if(calcIsobaricSpecificHeatCapacity()){changed = true;}}
 				if (specificIsochoricHeatCapacity == 0){if(calcIsochoricSpecificHeatCapacity()){changed = true;}}
-				if (quality == 0){if(calcQuality()){changed = true;}}
+				if (quality == -1){if(calcQuality()){changed = true;}}
 				if (dynamicViscosity == 0){if(calcDynamicViscosity()){changed = true;}}
 				if (thermalConductivity == 0){if(calcThermalConductivity()){{changed = true;}}}
 				if (prandtl == 0){if(calcPrandtl()){changed = true;}}
@@ -65,7 +65,7 @@ public class FluidH2O extends Fluid {
 	//<editor-fold desc="CALC Methods">
 	private boolean calcRegion(){
 		if(region != 0){return true;}
-		else if (temperature != 0 && quality != 0){sstate = SteamState.newTx(temperature, quality);}
+		else if (temperature != 0 && quality != -1){sstate = SteamState.newTx(temperature, quality);}
 		else if (temperature != 0 && specificEnthalpy != 0){sstate = SteamState.newTs(temperature, specificEnthalpy);}
 		else if (pressure != 0 && specificVolume != 0){sstate = SteamState.newPv(pressure, specificVolume);}
 		else if (pressure != 0 && specificEntropy != 0){sstate = SteamState.newPs(pressure, specificEntropy);}
@@ -177,91 +177,91 @@ public class FluidH2O extends Fluid {
 	//<editor-fold desc="GET Methods">
 	@Override
 	public double getMassFlow() {
-		if(!solved){solve();}
+		if(!solved && massFlow == 0){solve();}
 		return massFlow;
 	}
 
 	@Override
 	public double getPrandtl() {
-		if(!solved){solve();}
+		if(!solved && prandtl == 0){solve();}
 		return prandtl;
 	}
 
 	@Override
 	public double getDensity() {
-		if(!solved){solve();}
+		if(!solved && density == 0){solve();}
 		return density;
 	}
 
 	@Override
 	public double getSpecificVolume() {
-		if(!solved){solve();}
+		if(!solved && specificVolume == 0){solve();}
 		return specificVolume;
 	}
 
 	@Override
 	public double getPressure() {
-		if(!solved){solve();}
+		if(!solved && pressure == 0){solve();}
 		return pressure;
 	}
 
 	@Override
 	public double getSpecificEntropy() {
-		if(!solved){solve();}
+		if(!solved && specificEntropy == 0){solve();}
 		return specificEntropy;
 	}
 
 	@Override
 	public double getSpecificEnthalpy() {
-		if(!solved){solve();}
+		if(!solved && specificEnthalpy == 0){solve();}
 		return specificEnthalpy;
 	}
 
 	@Override
 	public double getSpecificInternalEnergy() {
-		if(!solved){solve();}
+		if(!solved && specificInternalEnergy == 0){solve();}
 		return specificInternalEnergy;
 	}
 
 	@Override
 	public double getSpecificIsobaricHeatCapacity() {
-		if(!solved){solve();}
+		if(!solved && specificIsobaricHeatCapacity == 0){solve();}
 		return specificIsobaricHeatCapacity;
 	}
 	
 	@Override
 	public double getSpecificIsochoricHeatCapacity() {
-		if(!solved){solve();}
+		if(!solved && specificIsochoricHeatCapacity == 0){solve();}
 		return specificIsochoricHeatCapacity;
 	}
 
 	@Override
 	public double getTemperature() {
-		if(!solved){solve();}
+		if(!solved && temperature == 0){solve();}
 		return temperature;
 	}
 	
 	@Override
 	public double getQuality(){
-		if(!solved){solve();}
+		if(!solved && quality == -1){solve();}
 		return quality;
 	}
 	
 	@Override
 	public double getDynamicViscosity(){
-		if(!solved){solve();}
+		if(!solved && dynamicViscosity == 0){solve();}
 		return dynamicViscosity;
 	}
 	
 	@Override
 	public double getThermalConductivity(){
-		if(!solved){solve();}
+		if(!solved && thermalConductivity == 0){solve();}
 		return thermalConductivity;
 	}
 	
 	@Override
 	public double getRegion(){
-		if(!solved){solve();}
+		if(!solved && region == 0){solve();}
 		return region;
 	}
 	//</editor-fold>
@@ -343,17 +343,22 @@ public class FluidH2O extends Fluid {
 		solved = false;
 		return this;
 	}
+	
 	@Override
 	public Fluid setQuality(double quality){
 		this.quality = quality;
 		solved = false;
 		return this;
 	}
+	
+	@Override
 	public Fluid setDynamicViscosity(double dynamicViscosity){
 		this.dynamicViscosity = dynamicViscosity;
 		solved = false;
 		return this;
 	}
+	
+	@Override
 	public Fluid setThermalConductivity(double thermalConductivity){
 		this.thermalConductivity = thermalConductivity;
 		solved = false;
@@ -361,18 +366,21 @@ public class FluidH2O extends Fluid {
 	}
 	//</editor-fold>
 	
+	@Override
 	public void printProperties(){
-		java.lang.System.out.println("Region                   : " + Integer.toString(region));
-		java.lang.System.out.println("Mass Flow Rate           : " + Double.toString(massFlow) + " kg/s");
-		java.lang.System.out.println("Specific Enthalpy        : " + Double.toString(specificEnthalpy) + " J/kg");
-		java.lang.System.out.println("Specific Entropy         : " + Double.toString(specificEntropy) + " J/kg·K");
-		java.lang.System.out.println("Prandtl Number           : " + Double.toString(prandtl));
-		java.lang.System.out.println("Pressure                 : " + Double.toString(pressure) + " Pa");
-		java.lang.System.out.println("Temperature              : " + Double.toString(temperature) + " K");
-		java.lang.System.out.println("Density                  : " + Double.toString(density) + " kg/m^3");
-		java.lang.System.out.println("Specific Volume          : " + Double.toString(specificVolume) + " m^3/kg");
-		java.lang.System.out.println("Specific Heat Capacity   : " + Double.toString(specificIsobaricHeatCapacity) + " J/kg*K");
-		java.lang.System.out.println("Specific Internal Energy : " + Double.toString(specificInternalEnergy) + " J/kg");
+		if(!solved){solve();}
+		System.out.println("Region                   : " + Integer.toString(region));
+		System.out.println("Quality                  : " + Double.toString(quality));
+		System.out.println("Mass Flow Rate           : " + Double.toString(massFlow) + " kg/s");
+		System.out.println("Specific Enthalpy        : " + Double.toString(specificEnthalpy) + " J/kg");
+		System.out.println("Specific Entropy         : " + Double.toString(specificEntropy) + " J/kg·K");
+		System.out.println("Prandtl Number           : " + Double.toString(prandtl));
+		System.out.println("Pressure                 : " + Double.toString(pressure) + " Pa");
+		System.out.println("Temperature              : " + Double.toString(temperature) + " K");
+		System.out.println("Density                  : " + Double.toString(density) + " kg/m^3");
+		System.out.println("Specific Volume          : " + Double.toString(specificVolume) + " m^3/kg");
+		System.out.println("Specific Heat Capacity   : " + Double.toString(specificIsobaricHeatCapacity) + " J/kg*K");
+		System.out.println("Specific Internal Energy : " + Double.toString(specificInternalEnergy) + " J/kg");
 	}
 	
 	private boolean solved = false;
@@ -387,7 +395,7 @@ public class FluidH2O extends Fluid {
 	private double specificIsochoricHeatCapacity;
 	private double specificVolume;
 	private double temperature;
-	private double quality;
+	private double quality = -1;
 	private double dynamicViscosity;
 	private double thermalConductivity;
 	private SteamState sstate;

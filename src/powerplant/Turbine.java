@@ -23,7 +23,7 @@ public class Turbine extends WorkingFluidObject {
 	}
 	public void solve(){
 		if(massFlow == 0){calcMassFlow();}
-		calcWorkEnthalpy();
+		if(workingFluidIn.getRegion() == 2){if(calcWorkEnthalpy()){solved = true;}}
 	}
 	private void calcMassFlow(){
 		if(workingFluidIn.getMassFlow()!=0 && workingFluidOut.getMassFlow()==0){
@@ -35,8 +35,8 @@ public class Turbine extends WorkingFluidObject {
 		}
 	}
 	private boolean calcWorkEnthalpy(){
-		double enthalpyIn = workingFluidIn.getSpecificEnthalpy();		System.out.println(enthalpyIn);
-		double enthalpyOut = workingFluidOut.getSpecificEnthalpy();		System.out.println(enthalpyOut);
+		double enthalpyIn = workingFluidIn.getSpecificEnthalpy();
+		double enthalpyOut = workingFluidOut.getSpecificEnthalpy();
 		if(specificWork != 0 && thermalEfficiency != 0 && enthalpyIn != 0 && enthalpyOut == 0){
 			workingFluidOut.setSpecificEnthalpy( enthalpyIn - specificWork/thermalEfficiency );
 			try{
@@ -52,6 +52,13 @@ public class Turbine extends WorkingFluidObject {
 			return true;
 		} else if(specificWork == 0 && thermalEfficiency != 0 && enthalpyIn != 0 && enthalpyOut != 0){
 			specificWork = (enthalpyIn - enthalpyOut) * thermalEfficiency;
+			return true;
+		} else if(specificWork == 0 && thermalEfficiency != 0 && enthalpyIn != 0 && enthalpyOut == 0 && workingFluidOut.getPressure() != 0){
+			try{
+				Fluid isentropicExitState = workingFluidIn.getClass().newInstance().setPressure(workingFluidOut.getPressure()).setSpecificEntropy(workingFluidIn.getSpecificEntropy());
+				specificWork = (enthalpyIn - isentropicExitState.getSpecificEnthalpy())*thermalEfficiency;
+				workingFluidOut.setSpecificEnthalpy(enthalpyIn - specificWork);
+			} catch(IllegalAccessException | InstantiationException e){}
 			return true;
 		} else {
 			return false;
@@ -93,9 +100,15 @@ public class Turbine extends WorkingFluidObject {
 	
 	public double getThermalEfficiency(){return thermalEfficiency;}
 	
+	@Override
+	public boolean isSolved(){
+		return solved;
+	}
+	
 	private Fluid workingFluidIn;
 	private Fluid workingFluidOut;
 	private double thermalEfficiency;
 	private double specificWork;
 	private double massFlow;
+	private boolean solved = false;
 }

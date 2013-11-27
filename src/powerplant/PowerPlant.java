@@ -4,10 +4,8 @@
  */
 package powerplant;
 
-import net.sf.jsteam.SteamState;
 import powerplant.fluid.Fluid;
 import powerplant.fluid.FluidH2O;
-import powerplant.fluid.Water;
 //import JProde.Prode;
 /**
  *
@@ -19,9 +17,9 @@ public class PowerPlant {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		//new Water().setSpecificEnthalpy(1500).setSpecificEntropy(4.18).;
-		//System.out.println(new Water().setPressure(0.101).setSpecificEntropy(4).getTemperature());
-		testTurbine();
+		//new FluidH2O().setQuality(0).setTemperature(373.15).printProperties();
+		//testTurbine();
+		testCycle();
 	}
 	
 	static void testSteam(){
@@ -30,16 +28,22 @@ public class PowerPlant {
 	}
 	
 	static void testTurbine(){
-		Turbine turbine = new Turbine(new FluidH2O().setPressure(101000).setTemperature(400).setMassFlow(100));
-		turbine.setThermalEfficiency(0.91).setWork(22400000).solve();
-		turbine.getWorkingFluidOutput().solve();
-		turbine.getWorkingFluidOutput().printProperties();
+		FluidH2O fluid = new FluidH2O();
+		Turbine turbine = new Turbine(fluid);
+		fluid.setPressure(12000000).setTemperature(650).setMassFlow(25);
+		turbine.getWorkingFluidOutput().setPressure(8000);
+		turbine.setThermalEfficiency(0.91).solve();
+		System.out.println(turbine.getWorkingFluidOutput().getPrandtl());
 	}
 	
 	static void testCycle(){
-		Turbine turbine = new Turbine(Water.class);
-		turbine.getWorkingFluidInput().setTemperature(400).setPressure(6000000);
+		Turbine turbine = new Turbine(new FluidH2O().setMassFlow(25).setTemperature(650).setPressure(12000000));
 		powerplant.lhe.Condenser condenser = new powerplant.lhe.Condenser(turbine.getWorkingFluidOutput());
-		condenser.getExchangeFluidIn().setTemperature(298.15).setPressure(101000);
+		turbine.setThermalEfficiency(0.91).solve();
+		condenser.getWorkingFluidInput().setPressure(8000);
+		condenser.getExchangeFluidIn().setMassFlow(1).setTemperature(298.15).setPressure(101000).solve();
+		turbine.solve();
+		condenser.solve();
+		condenser.getWorkingFluidOutput().printProperties();
 	}
 }
