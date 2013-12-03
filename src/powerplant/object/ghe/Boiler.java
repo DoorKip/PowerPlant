@@ -19,37 +19,37 @@ public class Boiler extends GasHeatExchanger{
 	
 	@Override
 	public void setGasInput(FlueGas flueIn) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public FlueGas getGasInput() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public FlueGas getGasOutput() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public GasHeatExchanger setWorkingFluidInput(Fluid fluid) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public GasHeatExchanger setWorkingFluidOutput(Fluid fluid) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public Fluid getWorkingFluidInput() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public Fluid getWorkingFluidOutput() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
