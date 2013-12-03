@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package powerplant.fluid;
 
@@ -42,4 +39,5 @@ public abstract class Fluid {
 	public abstract Fluid setDynamicViscosity(double dynamicViscosity);
 	public abstract Fluid setThermalConductivity(double thermalConductivity);
 	public abstract void printProperties();
+	public double nominalLiquidDensity;
 }

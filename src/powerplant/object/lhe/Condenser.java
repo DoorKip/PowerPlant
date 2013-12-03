@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package powerplant.lhe;
 
-import powerplant.WorkingFluidObject;
+package powerplant.object.lhe;
+
+import powerplant.object.WorkingFluidObject;
 import powerplant.fluid.Fluid;
 
 /**

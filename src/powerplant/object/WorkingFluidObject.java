@@ -1,15 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package powerplant;
+
+package powerplant.object;
 import powerplant.fluid.Fluid;
 /**
  *
  * @author DoorKip
  */
-public abstract class WorkingFluidObject {
+public abstract class WorkingFluidObject{ 
+	public abstract void solve();
 	/**
 	 * Sets the fluid object that the WFO will use as the input working fluid.
 	 * @param fluid 
@@ -35,4 +33,24 @@ public abstract class WorkingFluidObject {
 	 * @return boolean solution state.
 	 */
 	public abstract boolean isSolved();
+	
+	private boolean calcMassFlow(){
+		if(workingFluidInput.getMassFlow() != 0 && workingFluidOutput.getMassFlow() == 0){
+			massFlow = workingFluidInput.getMassFlow();
+			workingFluidOutput.setMassFlow(massFlow);
+			return true;
+		} else if(workingFluidInput.getMassFlow() == 0 && workingFluidOutput.getMassFlow() != 0){
+			massFlow = workingFluidOutput.getMassFlow();
+			workingFluidInput.setMassFlow(massFlow);
+			return true;
+		} else if(workingFluidInput.getMassFlow() != 0 && workingFluidOutput.getMassFlow() != 0 && workingFluidInput.getMassFlow() != workingFluidOutput.getMassFlow()){
+			throw new Error("Mass Flow Inequity");
+		}
+		return false;
+	}
+	
+	Fluid workingFluidInput;
+	Fluid workingFluidOutput;
+	double massFlow;
+	double isentropicEfficiency;
 }

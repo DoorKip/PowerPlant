@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package powerplant.fluid;
 
@@ -403,6 +400,8 @@ public class FluidH2O extends Fluid {
 	private double dynamicViscosity;
 	private double thermalConductivity;
 	private SteamState sstate;
-	private IF97 tempcalc = new IF97();
+	private final IF97 tempcalc = new IF97();
 	private int region = 0;
+	
+	public double nominalLiquidDensity = 995;
 }

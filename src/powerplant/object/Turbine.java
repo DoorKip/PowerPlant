@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package powerplant;
+
+package powerplant.object;
 
 import powerplant.fluid.Fluid;
 
@@ -37,26 +34,25 @@ public class Turbine extends WorkingFluidObject {
 	private boolean calcWorkEnthalpy(){
 		double enthalpyIn = workingFluidIn.getSpecificEnthalpy();
 		double enthalpyOut = workingFluidOut.getSpecificEnthalpy();
-		if(specificWork != 0 && thermalEfficiency != 0 && enthalpyIn != 0 && enthalpyOut == 0){
-			workingFluidOut.setSpecificEnthalpy( enthalpyIn - specificWork/thermalEfficiency );
+		if(specificWork != 0 && isentropicEfficiency != 0 && enthalpyIn != 0 && enthalpyOut == 0){
+			workingFluidOut.setSpecificEnthalpy( enthalpyIn - specificWork );
 			try{
-				Fluid isentropicExitState = workingFluidIn.getClass().newInstance().setSpecificEnthalpy(enthalpyIn - specificWork).setSpecificEntropy(workingFluidIn.getSpecificEntropy());
+				Fluid isentropicExitState = workingFluidIn.getClass().newInstance().setSpecificEnthalpy(enthalpyIn - specificWork/isentropicEfficiency).setSpecificEntropy(workingFluidIn.getSpecificEntropy());
 				workingFluidOut.setPressure(isentropicExitState.getPressure());
 			} catch(InstantiationException | IllegalAccessException e){}
 			return true;
-		} else if(specificWork != 0 && thermalEfficiency != 0 && enthalpyIn == 0 && enthalpyOut != 0){
-			workingFluidIn.setSpecificEnthalpy( enthalpyOut + specificWork / thermalEfficiency );
+		} else if(specificWork != 0 && isentropicEfficiency != 0 && enthalpyIn == 0 && enthalpyOut != 0){
+			workingFluidIn.setSpecificEnthalpy( enthalpyOut + specificWork );
 			return true;
-		} else if(specificWork != 0 && thermalEfficiency == 0 && enthalpyIn != 0 && enthalpyOut != 0){
-			thermalEfficiency = specificWork / (enthalpyIn - enthalpyOut);
+		} else if(specificWork != 0 && isentropicEfficiency == 0 && enthalpyIn != 0 && enthalpyOut != 0){
+			return false;
+		} else if(specificWork == 0 && isentropicEfficiency != 0 && enthalpyIn != 0 && enthalpyOut != 0){
+			specificWork = enthalpyIn - enthalpyOut;
 			return true;
-		} else if(specificWork == 0 && thermalEfficiency != 0 && enthalpyIn != 0 && enthalpyOut != 0){
-			specificWork = (enthalpyIn - enthalpyOut) * thermalEfficiency;
-			return true;
-		} else if(specificWork == 0 && thermalEfficiency != 0 && enthalpyIn != 0 && enthalpyOut == 0 && workingFluidOut.getPressure() != 0){
+		} else if(specificWork == 0 && isentropicEfficiency != 0 && enthalpyIn != 0 && enthalpyOut == 0 && workingFluidOut.getPressure() != 0){
 			try{
 				Fluid isentropicExitState = workingFluidIn.getClass().newInstance().setPressure(workingFluidOut.getPressure()).setSpecificEntropy(workingFluidIn.getSpecificEntropy());
-				specificWork = (enthalpyIn - isentropicExitState.getSpecificEnthalpy())*thermalEfficiency;
+				specificWork = (enthalpyIn - isentropicExitState.getSpecificEnthalpy())*isentropicEfficiency;
 				workingFluidOut.setSpecificEnthalpy(enthalpyIn - specificWork);
 			} catch(IllegalAccessException | InstantiationException e){}
 			return true;
@@ -85,8 +81,8 @@ public class Turbine extends WorkingFluidObject {
 		return this;
 	}
 	
-	public Turbine setThermalEfficiency(double thermalEfficiency){
-		this.thermalEfficiency = thermalEfficiency;
+	public Turbine setThermalEfficiency(double isentropicEfficiency){
+		this.isentropicEfficiency = isentropicEfficiency;
 		return this;
 	}
 
@@ -98,7 +94,7 @@ public class Turbine extends WorkingFluidObject {
 	
 	public double getWork(){return specificWork*massFlow;}
 	
-	public double getThermalEfficiency(){return thermalEfficiency;}
+	public double getIsentropicEfficiency(){return isentropicEfficiency;}
 	
 	@Override
 	public boolean isSolved(){
@@ -107,7 +103,7 @@ public class Turbine extends WorkingFluidObject {
 	
 	private Fluid workingFluidIn;
 	private Fluid workingFluidOut;
-	private double thermalEfficiency;
+	private double isentropicEfficiency;
 	private double specificWork;
 	private double massFlow;
 	private boolean solved = false;

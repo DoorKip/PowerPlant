@@ -1,20 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package powerplant.ghe;
 
-import powerplant.WorkingFluidObject;
-import powerplant.fluid.Fluid;
+package powerplant.object.ghe;
+
 import powerplant.gas.FlueGas;
+import powerplant.fluid.Fluid;
 
 /**
  *
  * @author DoorKip
  */
-public class SuperHeater extends GasHeatExchanger{
+public class Boiler extends GasHeatExchanger{
 
+	@Override
+	public void solve() {
+		//TODO Implement solve in powerplant.ghe.Boiler
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+	
 	@Override
 	public void setGasInput(FlueGas flueIn) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -31,12 +33,12 @@ public class SuperHeater extends GasHeatExchanger{
 	}
 
 	@Override
-	public WorkingFluidObject setWorkingFluidInput(Fluid fluid) {
+	public GasHeatExchanger setWorkingFluidInput(Fluid fluid) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 	@Override
-	public WorkingFluidObject setWorkingFluidOutput(Fluid fluid) {
+	public GasHeatExchanger setWorkingFluidOutput(Fluid fluid) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
@@ -52,7 +54,7 @@ public class SuperHeater extends GasHeatExchanger{
 
 	@Override
 	public boolean isSolved() {
-		//TODO Implement isSolved in powerplant.ghe.SuperHeater
+		//TODO Implement isSolved in powerplant.ghe.Boiler
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
