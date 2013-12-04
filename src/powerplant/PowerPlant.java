@@ -49,6 +49,9 @@ public class PowerPlant {
 		pump.getWorkingFluidOutput().setPressure(12000000);
 		turbine.solve();
 		condenser.solve();
+		pump.solve();
+		turbine.getWorkingFluidOutput().printProperties();
 		condenser.getWorkingFluidOutput().printProperties();
+		pump.getWorkingFluidOutput().printProperties();
 	}
 }

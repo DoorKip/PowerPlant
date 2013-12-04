@@ -19,43 +19,51 @@ public class Boiler extends GasHeatExchanger{
 	
 	@Override
 	public void setGasInput(FlueGas flueIn) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		gasInput = flueIn;
 	}
 
 	@Override
 	public FlueGas getGasInput() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return gasInput;
 	}
 
 	@Override
 	public FlueGas getGasOutput() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return gasOutput;
 	}
 
 	@Override
 	public GasHeatExchanger setWorkingFluidInput(Fluid fluid) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		workingFluidInput = fluid;
+		return this;
 	}
 
 	@Override
 	public GasHeatExchanger setWorkingFluidOutput(Fluid fluid) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		workingFluidOutput = fluid;
+		return this;
 	}
 
 	@Override
 	public Fluid getWorkingFluidInput() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return workingFluidInput;
 	}
 
 	@Override
 	public Fluid getWorkingFluidOutput() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return workingFluidOutput;
 	}
 
 	@Override
 	public boolean isSolved() {
-		//TODO Implement isSolved in powerplant.ghe.Boiler
-		throw new UnsupportedOperationException("Not supported yet.");
+		return solved;
 	}
+	
+	private boolean solved = false;
+	private Fluid workingFluidInput;
+	private Fluid workingFluidOutput;
+	private FlueGas gasInput;
+	private FlueGas gasOutput;
+	private double massFlow;
 
 }
