@@ -25,11 +25,39 @@ import powerplant.fluid.Fluid;
  * @author DoorKip
  */
 public class Boiler extends GasHeatExchanger{
+	
+	public Boiler(Fluid inputFluid){
+		workingFluidInput = inputFluid;
+		try{workingFluidOutput = inputFluid.getClass().newInstance();}
+		catch(InstantiationException | IllegalAccessException e){System.out.println("FUCK");}
+	}
 
 	@Override
 	public void solve() {
-		//TODO Implement solve in powerplant.ghe.Boiler
-		throw new UnsupportedOperationException("Not supported yet.");
+		if(massFlow == 0){calcMassFlow();}
+		calcPressure();
+	}
+	
+	private boolean calcPressure(){
+		//Ideal case for now
+		if(workingFluidInput.getPressure() != 0 && workingFluidOutput.getPressure() == 0){
+			workingFluidOutput.setPressure(workingFluidInput.getPressure());
+			return true;
+		} else if( workingFluidInput.getPressure() == 0 && workingFluidOutput.getPressure() != 0){
+			workingFluidInput.setPressure(workingFluidOutput.getPressure());
+			return true;
+		}
+		return false;
+	}
+	
+	private void calcMassFlow(){
+		if(workingFluidInput.getMassFlow()!=0 && workingFluidOutput.getMassFlow()==0){
+			massFlow = workingFluidInput.getMassFlow();
+			workingFluidOutput.setMassFlow(massFlow);
+		} else if(workingFluidInput.getMassFlow()==0 && workingFluidOutput.getMassFlow()!=0){
+			massFlow = workingFluidOutput.getMassFlow();
+			workingFluidInput.setMassFlow(massFlow);
+		}
 	}
 	
 	@Override
