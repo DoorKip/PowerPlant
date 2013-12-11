@@ -26,10 +26,20 @@ public class FlueGas {
 		return temperature;
 	}
 	
+	public double getMassFlow(){
+		return massFlow;
+	}
+	
 	public FlueGas setTemperature(double temperature){
 		this.temperature = temperature;
 		return this;
 	}
 	
+	public FlueGas setMassFlow(double massFlow){
+		this.massFlow = massFlow;
+		return this;
+	}
+	
 	private double temperature;
+	private double massFlow;
 }

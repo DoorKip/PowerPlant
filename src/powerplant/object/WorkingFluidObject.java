@@ -48,7 +48,7 @@ public abstract class WorkingFluidObject{
 	 * @return boolean solution state.
 	 */
 	public abstract boolean isSolved();
-	
+	/*
 	private boolean calcMassFlow(){
 		if(workingFluidInput.getMassFlow() != 0 && workingFluidOutput.getMassFlow() == 0){
 			massFlow = workingFluidInput.getMassFlow();
@@ -68,4 +68,5 @@ public abstract class WorkingFluidObject{
 	Fluid workingFluidOutput;
 	double massFlow;
 	double isentropicEfficiency;
+	*/
 }

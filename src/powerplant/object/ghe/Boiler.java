@@ -36,6 +36,7 @@ public class Boiler extends GasHeatExchanger{
 	public void solve() {
 		if(massFlow == 0){calcMassFlow();}
 		calcPressure();
+		calcToSatVapor();
 	}
 	
 	private boolean calcPressure(){
@@ -46,6 +47,22 @@ public class Boiler extends GasHeatExchanger{
 		} else if( workingFluidInput.getPressure() == 0 && workingFluidOutput.getPressure() != 0){
 			workingFluidInput.setPressure(workingFluidOutput.getPressure());
 			return true;
+		}
+		return false;
+	}
+	
+	private boolean calcToSatVapor(){
+		if(workingFluidInput.getSpecificEnthalpy() != 0 && workingFluidOutput.getSpecificEnthalpy() != 0){
+			specificEnthalpyFlow = workingFluidOutput.getSpecificEnthalpy() - workingFluidInput.getSpecificEnthalpy();
+		} else if(gasInput.getTemperature() != 0 && workingFluidOutput.getPressure() != 0 && workingFluidInput.getSpecificEnthalpy() != 0 && gasOutput.getTemperature() == 0){
+			workingFluidOutput.setQuality(1);
+		}
+		return false;
+	}
+	
+	private boolean designPipes(){
+		if(specificEnthalpyFlow != 0 && massFlow != 0){
+			
 		}
 		return false;
 	}
@@ -108,5 +125,6 @@ public class Boiler extends GasHeatExchanger{
 	private FlueGas gasInput;
 	private FlueGas gasOutput;
 	private double massFlow;
+	private double specificEnthalpyFlow;
 
 }

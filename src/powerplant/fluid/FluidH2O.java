@@ -20,6 +20,7 @@ package powerplant.fluid;
 import com.hummeling.if97.IF97;
 import com.hummeling.if97.OutOfRangeException;
 import net.sf.jsteam.SteamState;
+import net.sf.jsteam.region4;
 
 /**
  * Internal wrapper for jSteam
@@ -82,6 +83,7 @@ public class FluidH2O extends Fluid {
 	private boolean calcRegion(){
 		if(region != 0){return true;}
 		else if (temperature != 0 && quality != -1){sstate = SteamState.newTx(temperature, quality);}
+		else if (pressure != 0 && quality != -1){sstate = SteamState.newTx(region4.Tsat_p(pressure), quality);}
 		else if (temperature != 0 && specificEnthalpy != 0){sstate = SteamState.newTs(temperature, specificEnthalpy);}
 		else if (pressure != 0 && specificVolume != 0){sstate = SteamState.newPv(pressure, specificVolume);}
 		else if (pressure != 0 && specificEntropy != 0){sstate = SteamState.newPs(pressure, specificEntropy);}

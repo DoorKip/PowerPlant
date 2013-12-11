@@ -55,14 +55,16 @@ public class Pump extends WorkingFluidObject{
 	}
 	
 	public boolean calcPressure(){
+		//TODO Figure out why referencing workingFluidInput.nominalLiquidDensity does not work here
+		double nominalLiquidDensity = 995;
 		if(workingFluidInput.getPressure() != 0 && workingFluidOutput.getPressure() != 0 && specificWork ==0){
-			specificWork = (workingFluidInput.getPressure() - workingFluidOutput.getPressure())/workingFluidInput.nominalLiquidDensity;
+			specificWork = (workingFluidInput.getPressure() - workingFluidOutput.getPressure()) / nominalLiquidDensity;
 			return true;
 		} else if(workingFluidInput.getPressure() != 0 && workingFluidOutput.getPressure() == 0 && specificWork != 0){
-			workingFluidOutput.setPressure(specificWork * workingFluidInput.nominalLiquidDensity - workingFluidInput.getPressure());
+			workingFluidOutput.setPressure(specificWork * nominalLiquidDensity - workingFluidInput.getPressure());
 			return true;
 		} else if(workingFluidInput.getPressure() == 0 && workingFluidOutput.getPressure() != 0 && specificWork != 0){
-			workingFluidInput.setPressure(specificWork * workingFluidInput.nominalLiquidDensity + workingFluidOutput.getPressure());
+			workingFluidInput.setPressure(specificWork * nominalLiquidDensity + workingFluidOutput.getPressure());
 			return true;
 		}
 		return false;
@@ -101,6 +103,12 @@ public class Pump extends WorkingFluidObject{
 		return false;
 	}
 	
+	public WorkingFluidObject setWork(double work){
+		if(massFlow == 0){calcMassFlow();}
+		if(massFlow != 0){specificWork = work / massFlow;}
+		return this;
+	}
+	
 	@Override
 	public WorkingFluidObject setWorkingFluidInput(Fluid fluid) {
 		this.workingFluidInput = fluid;
@@ -112,6 +120,11 @@ public class Pump extends WorkingFluidObject{
 		this.workingFluidOutput = fluid;
 		return this;
 	}
+	
+	public WorkingFluidObject setIsentropicEfficiency(double isentropicEfficiency){
+		this.isentropicEfficiency = isentropicEfficiency;
+		return this;
+	}
 
 	@Override
 	public Fluid getWorkingFluidInput() {
@@ -121,6 +134,14 @@ public class Pump extends WorkingFluidObject{
 	@Override
 	public Fluid getWorkingFluidOutput() {
 		return workingFluidOutput;
+	}
+	
+	public double getIsentropicEfficiency(){
+		return isentropicEfficiency;
+	}
+	
+	public double getWork(){
+		return specificWork*massFlow;
 	}
 
 	@Override

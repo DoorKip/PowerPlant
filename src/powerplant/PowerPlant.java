@@ -22,6 +22,7 @@ import powerplant.object.Pump;
 import powerplant.fluid.Fluid;
 import powerplant.fluid.FluidH2O;
 import net.sf.jsteam.*;
+import powerplant.object.ghe.Boiler;
 
 /**
  *
@@ -33,9 +34,9 @@ public class PowerPlant {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		testSteam();
+		//testSteam();
 		//testTurbine();
-		//testCycle();
+		testCycle();
 	}
 	
 	static void testSteam(){
@@ -48,25 +49,36 @@ public class PowerPlant {
 	static void testTurbine(){
 		FluidH2O fluid = new FluidH2O();
 		Turbine turbine = new Turbine(fluid);
-		fluid.setPressure(12000000).setTemperature(650).setMassFlow(25);
+		fluid.setPressure(12000000).setTemperature(700).setMassFlow(25);
 		turbine.getWorkingFluidOutput().setPressure(8000);
 		turbine.setThermalEfficiency(0.91).solve();
-		System.out.println(turbine.getWorkingFluidOutput().getPrandtl());
+		turbine.getWorkingFluidOutput().printProperties();
+		System.out.println(turbine.getWork());
 	}
 	
 	static void testCycle(){
 		Turbine turbine = new Turbine(new FluidH2O().setMassFlow(25).setTemperature(650).setPressure(12000000));
 		powerplant.object.lhe.Condenser condenser = new powerplant.object.lhe.Condenser(turbine.getWorkingFluidOutput());
 		Pump pump = new Pump(condenser.getWorkingFluidOutput());
+		Boiler boiler = new Boiler(pump.getWorkingFluidOutput());
 		turbine.setThermalEfficiency(0.91).solve();
 		condenser.getWorkingFluidInput().setPressure(8000);
 		condenser.getExchangeFluidIn().setMassFlow(1).setTemperature(298.15).setPressure(101000).solve();
 		pump.getWorkingFluidOutput().setPressure(12000000);
+		pump.setIsentropicEfficiency(0.85);
 		turbine.solve();
 		condenser.solve();
 		pump.solve();
 		turbine.getWorkingFluidOutput().printProperties();
 		condenser.getWorkingFluidOutput().printProperties();
 		pump.getWorkingFluidOutput().printProperties();
+		System.out.println(turbine.getWork() - pump.getWork());
 	}
 }
+
+/* Things that will require guesses
+Condenser
+- Number of passes
+- Transverse number of tubes
+-
+*/
