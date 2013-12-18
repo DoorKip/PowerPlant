@@ -17,12 +17,12 @@
 
 package powerplant;
 
-import powerplant.object.Turbine;
-import powerplant.object.Pump;
 import powerplant.fluid.Fluid;
 import powerplant.fluid.FluidH2O;
 import net.sf.jsteam.*;
-import powerplant.object.ghe.Boiler;
+import powerplant.object.*;
+import powerplant.object.ghe.*;
+import powerplant.object.lhe.*;
 
 /**
  *
@@ -37,6 +37,7 @@ public class PowerPlant {
 		//testSteam();
 		//testTurbine();
 		testCycle();
+		//System.out.println(EngineeringMath.haalandEquation(320000, 0.00015/0.315));
 	}
 	
 	static void testSteam(){
@@ -60,19 +61,25 @@ public class PowerPlant {
 		Turbine turbine = new Turbine(new FluidH2O().setMassFlow(25).setTemperature(650).setPressure(12000000));
 		powerplant.object.lhe.Condenser condenser = new powerplant.object.lhe.Condenser(turbine.getWorkingFluidOutput());
 		Pump pump = new Pump(condenser.getWorkingFluidOutput());
-		Boiler boiler = new Boiler(pump.getWorkingFluidOutput());
+		Pipe pipe1 = new Pipe(condenser.getWorkingFluidOutput());
+		Boiler boiler = new Boiler(pipe1.getWorkingFluidOutput());
 		turbine.setThermalEfficiency(0.91).solve();
 		condenser.getWorkingFluidInput().setPressure(8000);
 		condenser.getExchangeFluidIn().setMassFlow(1).setTemperature(298.15).setPressure(101000).solve();
 		pump.getWorkingFluidOutput().setPressure(12000000);
 		pump.setIsentropicEfficiency(0.85);
+		pipe1.setLength(35.052);
+		pipe1.setInteriorDiameter(0.3);
+		pipe1.setSurfaceRoughness(0.000975);
 		turbine.solve();
 		condenser.solve();
 		pump.solve();
+		pipe1.solve();
 		turbine.getWorkingFluidOutput().printProperties();
 		condenser.getWorkingFluidOutput().printProperties();
 		pump.getWorkingFluidOutput().printProperties();
 		System.out.println(turbine.getWork() - pump.getWork());
+		System.out.println(pipe1.getPressureLoss());
 	}
 }
 

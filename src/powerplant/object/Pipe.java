@@ -17,6 +17,7 @@
 
 package powerplant.object;
 
+import powerplant.EngineeringMath;
 import powerplant.fluid.Fluid;
 
 /**
@@ -25,40 +26,121 @@ import powerplant.fluid.Fluid;
  */
 public class Pipe extends WorkingFluidObject {
 
+	public Pipe(Fluid inputFluid){
+		workingFluidInput = inputFluid;
+		try{workingFluidOutput = inputFluid.getClass().newInstance();}
+		catch(InstantiationException | IllegalAccessException e){}
+	}
+	
 	@Override
 	public void solve() {
-		//TODO Implement solve in powerplant.Pipe
-		throw new UnsupportedOperationException("Not supported yet.");
+		calcMassFlow();
+		calcPressure();
+	}
+	
+	private void calcMassFlow(){
+		if(workingFluidInput.getMassFlow() != 0 && workingFluidOutput.getMassFlow() == 0){
+			massFlow = workingFluidInput.getMassFlow();
+			workingFluidOutput.setMassFlow(massFlow);
+		} else if( workingFluidInput.getMassFlow() == 0 && workingFluidOutput.getMassFlow() != 0){
+			massFlow = workingFluidOutput.getMassFlow();
+			workingFluidInput.setMassFlow(massFlow);
+		}
+	}
+	
+	private void calcPressure(){
+		if(workingFluidInput.getPressure() != 0 && workingFluidOutput.getPressure() == 0){
+			if(calcPipeLoss()){
+				workingFluidOutput.setPressure(workingFluidInput.getPressure() - pressureLoss);
+				solved = true;
+			}
+		}
+	}
+	
+	private boolean calcPipeLoss(){
+		if(length != 0 && interiorDiameter != 0 && surfaceRoughness != 0 && pressureLoss == 0){
+			if(workingFluidInput.getPressure() != 0 && workingFluidInput.getDensity() != 0 && workingFluidOutput.getPressure() == 0){
+				double area = Math.PI * Math.pow(interiorDiameter, 2);
+				double velocity = massFlow / ( area * workingFluidInput.getDensity() );
+				double reynoldsNumber = workingFluidInput.getDensity() * velocity * interiorDiameter / workingFluidInput.getDynamicViscosity();
+				double frictionFactor = 0;
+				if( reynoldsNumber < 2300 ){
+					frictionFactor = 64/reynoldsNumber;
+				} else if( reynoldsNumber > 4000 ){
+					frictionFactor = EngineeringMath.haalandEquation(reynoldsNumber, surfaceRoughness/interiorDiameter);
+				} //TODO Implement an else case here to handle transient flow.
+				pressureLoss = frictionFactor*(length/interiorDiameter)*(workingFluidInput.getDensity()*Math.pow(velocity, 2)/2);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public WorkingFluidObject setWorkingFluidInput(Fluid fluid) {
-		//TODO Implement setWorkingFluidInput in powerplant.Pipe
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.workingFluidInput = fluid;
+		return this;
 	}
 
 	@Override
 	public WorkingFluidObject setWorkingFluidOutput(Fluid fluid) {
-		//TODO Implement setWorkingFluidOutput in powerplant.Pipe
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.workingFluidOutput = fluid;
+		return this;
+	}
+	
+	public WorkingFluidObject setLength(double length){
+		this.length = length;
+		return this;
+	}
+	
+	public WorkingFluidObject setInteriorDiameter(double interiorDiameter){
+		this.interiorDiameter = interiorDiameter;
+		return this;
+	}
+	
+	public WorkingFluidObject setSurfaceRoughness(double surfaceRoughness){
+		this.surfaceRoughness = surfaceRoughness;
+		return this;
 	}
 
 	@Override
 	public Fluid getWorkingFluidInput() {
-		//TODO Implement getWorkingFluidInput in powerplant.Pipe
-		throw new UnsupportedOperationException("Not supported yet.");
+		return workingFluidInput;
 	}
 
 	@Override
 	public Fluid getWorkingFluidOutput() {
-		//TODO Implement getWorkingFluidOutput in powerplant.Pipe
-		throw new UnsupportedOperationException("Not supported yet.");
+		return workingFluidOutput;
+	}
+	
+	public double getLength(){
+		return length;
+	}
+	
+	public double getInteriorDiameter(){
+		return interiorDiameter;
+	}
+	
+	public double getSurfaceRoughness(){
+		return surfaceRoughness;
+	}
+	
+	public double getPressureLoss(){
+		return pressureLoss;
 	}
 
 	@Override
 	public boolean isSolved() {
-		//TODO Implement isSolved in powerplant.Pipe
-		throw new UnsupportedOperationException("Not supported yet.");
+		return solved;
 	}
+	
+	private boolean solved = false;
+	private Fluid workingFluidInput;
+	private Fluid workingFluidOutput;
+	private double length;
+	private double interiorDiameter;
+	private double surfaceRoughness;
+	private double pressureLoss;
+	private double massFlow;
 
 }
