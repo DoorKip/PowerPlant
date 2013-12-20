@@ -32,6 +32,12 @@ public class EngineeringMath {
 		double frictionFactor = Math.pow(1/(-1.8 * Math.log10( Math.pow(relativeRoughness/3.7 , 1.11) + 6.9/reynoldsNumber)), 2);
 		return frictionFactor;
 	}
+	public static double averageAND(double a, double b){
+		if(a != 0 && b != 0){return (a+b)/2;}
+		else if(a != 0 && b == 0){return a;}
+		else if(a == 0 && b != 0){return b;}
+		else return 0;
+	}
 	
 	//TODO Implement Serghide's Equation to test it against Haaland's
 	

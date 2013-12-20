@@ -17,6 +17,7 @@
 
 package powerplant.object.ghe;
 
+import powerplant.EngineeringMath;
 import powerplant.object.WorkingFluidObject;
 import powerplant.fluid.Fluid;
 import powerplant.gas.FlueGas;
@@ -26,7 +27,52 @@ import powerplant.gas.FlueGas;
  * @author DoorKip
  */
 public class SuperHeater extends GasHeatExchanger{
+	
+	public SuperHeater(Fluid inputFluid){
+		workingFluidInput = inputFluid;
+		try{workingFluidOutput = inputFluid.getClass().newInstance();}
+		catch(InstantiationException | IllegalAccessException e){}
+	}
 
+	@Override
+	public void solve() {
+		calcMassFlow();
+	}
+	
+	private void calcMassFlow(){
+		if(workingFluidInput.getMassFlow() != 0 && workingFluidOutput.getMassFlow() == 0){
+			massFlow = workingFluidInput.getMassFlow();
+			workingFluidOutput.setMassFlow(massFlow);
+		} else if( workingFluidInput.getMassFlow() == 0 && workingFluidOutput.getMassFlow() != 0){
+			massFlow = workingFluidOutput.getMassFlow();
+			workingFluidInput.setMassFlow(massFlow);
+		}
+	}
+	
+	private boolean sizeSuperHeater(){
+		if(minimumPitch != 0 && width != 0 && transverseTubes == 0){
+			transverseTubes = (int) (width/minimumPitch);
+			actualTransversePitch = width/(transverseTubes);
+		}else{return false;}
+		double massFlowPerBank = massFlow/transverseTubes;
+		double reynoldsNumber = (4*massFlowPerBank) / (Math.PI * workingFluidInput.getDynamicViscosity() * innerDiameter);
+		double frictionFactor = 0;
+		if( reynoldsNumber < 2300 ){
+			frictionFactor = 64/reynoldsNumber;
+		} else if( reynoldsNumber > 4000 ){
+			frictionFactor = Math.pow(1.58 * Math.log(reynoldsNumber) - 3.28, -2); //Smooth pipe, turbulent flow
+		}
+		double nusseltNumber;
+		try{
+			Fluid testFluid = workingFluidInput.getClass().newInstance();
+			testFluid.setTemperature(EngineeringMath.averageAND(workingFluidInput.getTemperature(), workingFluidOutput.getTemperature())).setPressure(workingFluidInput.getPressure());
+			nusseltNumber = ((frictionFactor/2)*reynoldsNumber*testFluid.getPrandtl())/(1.07+12.7*Math.sqrt(frictionFactor/2)*(Math.pow(testFluid.getPrandtl(),(2.0/3.0))-1));
+		}
+		catch(InstantiationException | IllegalAccessException e){return false;}
+		
+		return false;
+	}
+	
 	@Override
 	public void setGasInput(FlueGas flueIn) {
 		//TODO Implement setGasInput in powerplant.ghe.SuperHeater
@@ -46,40 +92,48 @@ public class SuperHeater extends GasHeatExchanger{
 	}
 
 	@Override
-	public void solve() {
-		//TODO Implement solve in powerplant.ghe.SuperHeater
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
 	public WorkingFluidObject setWorkingFluidInput(Fluid fluid) {
-		//TODO Implement setWorkingFluidInput in powerplant.ghe.SuperHeater
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.workingFluidInput = fluid;
+		return this;
 	}
 
 	@Override
 	public WorkingFluidObject setWorkingFluidOutput(Fluid fluid) {
-		//TODO Implement setWorkingFluidOutput in powerplant.ghe.SuperHeater
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.workingFluidOutput = fluid;
+		return this;
 	}
+	
+	public WorkingFluidObject setWidth(double width){this.width = width; return this;}
+	public WorkingFluidObject setHeight(double height){this.height = height; return this;}
+	public WorkingFluidObject setDepth(double depth){this.depth = depth; return this;}
+	public WorkingFluidObject setMinimumPitch(double minimumPitch){this.minimumPitch = minimumPitch; return this;}
 
 	@Override
 	public Fluid getWorkingFluidInput() {
-		//TODO Implement getWorkingFluidInput in powerplant.ghe.SuperHeater
-		throw new UnsupportedOperationException("Not supported yet.");
+		return workingFluidInput;
 	}
 
 	@Override
 	public Fluid getWorkingFluidOutput() {
-		//TODO Implement getWorkingFluidOutput in powerplant.ghe.SuperHeater
-		throw new UnsupportedOperationException("Not supported yet.");
+		return workingFluidOutput;
 	}
 
 	@Override
 	public boolean isSolved() {
-		//TODO Implement isSolved in powerplant.ghe.SuperHeater
-		throw new UnsupportedOperationException("Not supported yet.");
+		return solved;
 	}
 	
-	
+	private boolean solved = false;
+	private Fluid workingFluidInput;
+	private Fluid workingFluidOutput;
+	private double massFlow;
+	private double width;
+	private double height;
+	private double depth;
+	private double minimumPitch;
+	private double actualTransversePitch;
+	private double outerDiameter;
+	private double innerDiameter;
+	private int transverseTubes;
+	private int longitudinalTubes;
 }

@@ -60,12 +60,16 @@ public class Pipe extends WorkingFluidObject {
 	private boolean calcPipeLoss(){
 		if(length != 0 && interiorDiameter != 0 && surfaceRoughness != 0 && pressureLoss == 0){
 			if(workingFluidInput.getPressure() != 0 && workingFluidInput.getDensity() != 0 && workingFluidOutput.getPressure() == 0){
-				double area = Math.PI * Math.pow(interiorDiameter, 2);
+				double area = Math.PI * Math.pow(interiorDiameter/2, 2);
 				double velocity = massFlow / ( area * workingFluidInput.getDensity() );
 				double reynoldsNumber = workingFluidInput.getDensity() * velocity * interiorDiameter / workingFluidInput.getDynamicViscosity();
+				double reynoldsNumber2 = (4*massFlow) / (Math.PI * workingFluidInput.getDynamicViscosity() * interiorDiameter);
+				System.out.println(reynoldsNumber2);
+				System.out.println(workingFluidInput.getDynamicViscosity());
 				double frictionFactor = 0;
 				if( reynoldsNumber < 2300 ){
-					frictionFactor = 64/reynoldsNumber;
+					System.out.println("Laminar");
+					frictionFactor = 64/reynoldsNumber2;
 				} else if( reynoldsNumber > 4000 ){
 					frictionFactor = EngineeringMath.haalandEquation(reynoldsNumber, surfaceRoughness/interiorDiameter);
 				} //TODO Implement an else case here to handle transient flow.

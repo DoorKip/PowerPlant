@@ -26,6 +26,17 @@ import powerplant.fluid.Fluid;
  * @author DoorKip
  */
 public class Condenser extends LiquidHeatExchanger{
+	private enum TubeLayout{
+		SQUARE(1.0,90),
+		STAGERED(1.0,45);
+		TubeLayout(double cl, double angle){
+			this.cl = cl;
+			this.angle = angle;
+		}
+		double CL(){return cl;}
+		private double cl;
+		private double angle;
+	}
 	
 	public Condenser(Fluid inputFluid){
 		workingFluidInput = inputFluid;
@@ -35,6 +46,8 @@ public class Condenser extends LiquidHeatExchanger{
 			exchangeFluidOutput = inputFluid.getClass().newInstance();
 		}
 		catch(InstantiationException | IllegalAccessException e){}
+		//For now, assume square layout
+		tubeLayout = TubeLayout.SQUARE;
 	}
 	
 	public void solve(){
@@ -71,9 +84,9 @@ public class Condenser extends LiquidHeatExchanger{
 		double hEFOut = exchangeFluidOutput.getSpecificEnthalpy();
 		double hWFIn = workingFluidInput.getSpecificEnthalpy();
 		double hWFOut = workingFluidOutput.getSpecificEnthalpy();
-		if (hEFIn != 0 && hEFOut == 0 && hWFIn != 0 && hWFOut == 0 && workingFluidInput.getRegion() == 4){
+		if (hEFIn != 0 && hEFOut == 0 && hWFIn != 0 && hWFOut == 0 && workingFluidInput.getRegion() != 0){
 			try{
-				Fluid enthalpyTest = workingFluidInput.getClass().newInstance().setQuality(0).setTemperature(workingFluidInput.getTemperature());
+				Fluid enthalpyTest = workingFluidInput.getClass().newInstance().setQuality(0).setPressure(workingFluidInput.getPressure());
 				workingFluidOutput.setSpecificEnthalpy(enthalpyTest.getSpecificEnthalpy()).setPressure(workingFluidInput.getPressure());
 				exchangeFluidOutput.setSpecificEnthalpy(hEFIn + (hWFIn - enthalpyTest.getSpecificEnthalpy()));
 				return true;
@@ -81,6 +94,15 @@ public class Condenser extends LiquidHeatExchanger{
 		} else {System.out.println("SHIT BROKE"); return false;}
 	}
 	
+	private boolean designCondenser(){
+		if(numberPasses == 1){double CTP = 0.93;}
+		else if(numberPasses == 2){double CTP = 0.9;}
+		else{return false;}
+		if(exchangeFluidInput.getTemperature() != 0 && exchangeFluidOutput.getTemperature() != 0 && workingFluidInput.getRegion() != 0){
+			
+		}
+		return false;
+	}
 	@Override
 	public WorkingFluidObject setExchageFluidIn(Fluid fluid) {
 		exchangeFluidInput = fluid;
@@ -130,10 +152,15 @@ public class Condenser extends LiquidHeatExchanger{
 		return solved;
 	}
 	
+	private TubeLayout tubeLayout;
 	private Fluid workingFluidInput;
 	private Fluid workingFluidOutput;
 	private Fluid exchangeFluidInput;
 	private Fluid exchangeFluidOutput;
 	private double massFlow;
 	private boolean solved = false;
+	private int transverseTubes;
+	private int numberPasses;
+	private double innerFoulingResistance;
+	private double outerFoulingResistance;
 }

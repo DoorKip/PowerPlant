@@ -399,6 +399,8 @@ public class FluidH2O extends Fluid {
 		System.out.println("Specific Volume          : " + Double.toString(specificVolume) + " m^3/kg");
 		System.out.println("Specific Heat Capacity   : " + Double.toString(specificIsobaricHeatCapacity) + " J/kg*K");
 		System.out.println("Specific Internal Energy : " + Double.toString(specificInternalEnergy) + " J/kg");
+		System.out.println("Dynamic Viscosity        : " + Double.toString(dynamicViscosity));
+		System.out.println("Kinematic Viscosity      : " + Double.toString(dynamicViscosity/density));
 	}
 	
 	private boolean solved = false;
