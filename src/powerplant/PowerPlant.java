@@ -35,11 +35,11 @@ public class PowerPlant {
 	 */
 	public static void main(String[] args) {
 		//testSteam();
-		//double res = testTurbine()*4 + testTurbine2()*4 - testPump(); System.out.println(res);
+		double res = testTurbine()*4 + testTurbine2()*4 - testPump(); System.out.println(res);
 		//testCycle();
 		//System.out.println(EngineeringMath.haalandEquation(320000, 0.00015/0.315));
 		//TestProde();
-		testPipe();
+		//testPipe();
 	}
 	
 	static void testSteam(){
@@ -52,18 +52,42 @@ public class PowerPlant {
 	}
 	
 	static void testPipe(){
-		double fine = 4.572E-5; double medium = 9.7536E-4; double coarse = 1.95072E-3;
-		double length = 115;
-		//Pipe pipe = new Pipe(new FluidH2O().setTemperature(700+237.15).setPressure(12000000).setMassFlow(96.98));//medium,16,14.324 -> 36795
-		//Pipe pipe = new Pipe(new FluidH2O().setTemperature(151.9+237.15).setPressure(12000000).setMassFlow(96.98));//coarse,10,9.564 -> 11724
-		//Pipe pipe = new Pipe(new FluidH2O().setTemperature(217+237.15).setPressure(500000).setMassFlow(77.584));//fine,24,22.626 -> 12916
-		Pipe pipe = new Pipe(new FluidH2O().setTemperature(550+237.15).setPressure(500000-121630).setMassFlow(77.584));//fine,24,22.626 -> 30876
-		pipe.setLength(Units.ft_meter(length));
-		pipe.setInteriorDiameter(Units.inch_meter(22.626));
-		pipe.setSurfaceRoughness(fine);
-		pipe.solve();
-		//pipe.getWorkingFluidInput().printProperties();
-		System.out.println(pipe.getPressureLoss());
+		double fine = Units.ft_meter(0.00015);
+		double medium = Units.ft_meter(0.0032);
+		double coarse = Units.ft_meter(0.0064);
+		
+		double length = Units.ft_meter(115);
+		
+		Pipe pipe1 = new Pipe(new FluidH2O().setTemperature(700+237.15).setPressure(12000000).setMassFlow(96.68));
+		pipe1.setInteriorDiameter(Units.inch_meter(14.324));//medium,16,14.324 -> 36795
+		pipe1.setSurfaceRoughness(medium);
+		pipe1.setLength(length);
+		pipe1.solve();
+		
+		Pipe pipe2 = new Pipe(new FluidH2O().setTemperature(151.9+237.15).setPressure(12000000).setMassFlow(96.68));
+		pipe2.setInteriorDiameter(Units.inch_meter(9.564)); //coarse,10,9.564 -> 11724
+		pipe2.setSurfaceRoughness(coarse);
+		pipe2.setLength(length);
+		pipe2.solve();
+		
+		Pipe pipe3 = new Pipe(new FluidH2O().setTemperature(217+237.15).setPressure(500000).setMassFlow(77.584));
+		pipe3.setInteriorDiameter(Units.inch_meter(22.626)); //fine,24,22.626 -> 12916
+		pipe3.setSurfaceRoughness(fine);
+		pipe3.setLength(length);
+		pipe3.solve();
+		
+		Pipe pipe4 = new Pipe(new FluidH2O().setTemperature(550+237.15).setPressure(500000-121630).setMassFlow(77.584));
+		pipe4.setInteriorDiameter(Units.inch_meter(22.626)); //fine,24,22.626 -> 30876
+		pipe4.setSurfaceRoughness(fine);
+		pipe4.setLength(length);
+		pipe4.solve();
+		
+		System.out.println(pipe1.getPressureLoss());
+		System.out.println(pipe2.getPressureLoss());
+		System.out.println(pipe3.getPressureLoss());
+		System.out.println(pipe4.getPressureLoss());
+		pipe1.getWorkingFluidInput().printProperties();
+		System.out.println(pipe1.reynoldsNumber);
 	}
 	
 	static void testNusselt(){
@@ -78,11 +102,11 @@ public class PowerPlant {
 	static double testTurbine(){
 		FluidH2O fluid = new FluidH2O();
 		Turbine turbine = new Turbine(fluid);
-		fluid.setPressure(12000000-109370-35429).setTemperature(699.8+273.15).setMassFlow(96.68/4);
+		fluid.setPressure(12000000-54685-17714).setTemperature(699.8+273.15).setMassFlow(96.68/4);
 		turbine.getWorkingFluidOutput().setPressure(500000);
 		turbine.setThermalEfficiency(0.97).solve();
-		turbine.getWorkingFluidOutput().printProperties();
-		double result = turbine.getWork()*0.91;
+		//turbine.getWorkingFluidOutput().printProperties();
+		double result = turbine.getWork();
 		System.out.println(result);
 		return result;
 	}
@@ -99,18 +123,18 @@ public class PowerPlant {
 		*/
 		FluidH2O fluid2 = new FluidH2O();
 		Turbine turbine2 = new Turbine(fluid2);
-		fluid2.setPressure(500000-121630).setTemperature(548.85+273.15).setMassFlow(77.344/4);
-		turbine2.getWorkingFluidOutput().setPressure(8000);
+		fluid2.setPressure(500000-63068).setTemperature(548.85+273.15).setMassFlow(77.344/4);
+		turbine2.getWorkingFluidOutput().setPressure(35000);
 		turbine2.setThermalEfficiency(0.97).solve();
-		turbine2.getWorkingFluidOutput().printProperties();
-		double result = turbine2.getWork()*0.91;
-		System.out.println(result);
+		//turbine2.getWorkingFluidOutput().printProperties();
+		double result2 = turbine2.getWork();
+		System.out.println(result2);
 		//System.out.println(turbine.getWork()*0.91 - turbine2.getWork()*0.91);
-		return result;
+		return result2;
 	}
 	
 	static double testPump(){
-		Pump pump = new Pump(new FluidH2O().setMassFlow(96.68).setPressure(8000).setQuality(0));
+		Pump pump = new Pump(new FluidH2O().setMassFlow(96.68).setPressure(35000).setQuality(0));
 		pump.getWorkingFluidOutput().setPressure(12000000);
 		pump.setIsentropicEfficiency(0.87);
 		pump.solve();
