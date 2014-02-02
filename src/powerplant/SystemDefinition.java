@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 DoorKip
+ * Copyright (C) 2014 DoorKip
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,28 @@
 
 package powerplant;
 
+import java.util.ArrayList;
+import powerplant.object.WorkingFluidObject;
+
 /**
  *
  * @author DoorKip
  */
-public class ParticleSwarmOptimizer {
+public class SystemDefinition {
+	public static ArrayList<WorkingFluidObject> getDefinition(){
+		if (!isDefined){
+			buildDefinition();
+		}
+		return (ArrayList<WorkingFluidObject>) objectArray.clone();
+	}
+	public static void buildDefinition(){
+		//This is a placeholder for now. Eventually there will be a GUI or something to do this.
+		//objectArray.add();
+	}
 	
-	float phiP;
-	float phiG;
-	float omega;
+	
+	
+	private static boolean isDefined;
+	private static int variableAmmount;
+	private static ArrayList<WorkingFluidObject> objectArray;
 }

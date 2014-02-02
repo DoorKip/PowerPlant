@@ -35,7 +35,7 @@ public class PowerPlant {
 	 */
 	public static void main(String[] args) {
 		//testSteam();
-		double res = testTurbine()*4 + testTurbine2()*4 - testPump(); System.out.println(res);
+		//double res = testTurbine()*4 + testTurbine2()*4 - testPump(); System.out.println(res);
 		//testCycle();
 		//System.out.println(EngineeringMath.haalandEquation(320000, 0.00015/0.315));
 		//TestProde();
