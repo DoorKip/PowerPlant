@@ -40,6 +40,7 @@ public class PowerPlant {
 		//System.out.println(EngineeringMath.haalandEquation(320000, 0.00015/0.315));
 		//TestProde();
 		//testPipe();
+		testTurbine();
 	}
 	
 	static void testSteam(){
@@ -105,7 +106,7 @@ public class PowerPlant {
 		fluid.setPressure(12000000-54685-17714).setTemperature(699.8+273.15).setMassFlow(96.68/4);
 		turbine.getWorkingFluidOutput().setPressure(500000);
 		turbine.setThermalEfficiency(0.97).solve();
-		//turbine.getWorkingFluidOutput().printProperties();
+		turbine.getWorkingFluidOutput().printProperties();
 		double result = turbine.getWork();
 		System.out.println(result);
 		return result;

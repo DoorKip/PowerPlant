@@ -17,6 +17,7 @@
 
 package powerplant.object;
 
+import java.util.ArrayList;
 import powerplant.fluid.Fluid;
 
 /**
@@ -60,5 +61,7 @@ public class FlowSplitter extends WorkingFluidObject{
 		//TODO Implement isSolved in powerplant.object.FlowSplitter
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+	
+	private ArrayList<Fluid> workingFluidOuputArray;
 
 }
