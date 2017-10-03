@@ -90,7 +90,10 @@ public class FluidH2O extends Fluid {
 		else if (pressure != 0 && specificEnthalpy != 0){sstate = SteamState.newPh(pressure, specificEnthalpy);}
 		else if (pressure != 0 && temperature != 0){sstate = SteamState.newPT(pressure, temperature);}
 		else if (specificEnthalpy != 0 && specificEntropy != 0){
-			try{pressure = tempcalc.pressureHS(specificEnthalpy/1000, specificEntropy/1000)*1000000;} catch (OutOfRangeException e) {}
+			try{
+                            pressure = tempcalc.pressureHS(specificEnthalpy/1000,
+                                    specificEntropy/1000)*1000000;
+                        } catch (OutOfRangeException e) {}
 			sstate = SteamState.newPh(pressure, specificEnthalpy);
 		} else return false;
 		switch(sstate.getRegion()){

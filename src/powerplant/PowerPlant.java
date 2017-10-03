@@ -38,9 +38,9 @@ public class PowerPlant {
 		//double res = testTurbine()*4 + testTurbine2()*4 - testPump(); System.out.println(res);
 		//testCycle();
 		//System.out.println(EngineeringMath.haalandEquation(320000, 0.00015/0.315));
-		//TestProde();
 		//testPipe();
-		testTurbine();
+		//testTurbine();
+		testCondenser();
 	}
 	
 	static void testSteam(){
@@ -89,6 +89,22 @@ public class PowerPlant {
 		System.out.println(pipe4.getPressureLoss());
 		pipe1.getWorkingFluidInput().printProperties();
 		System.out.println(pipe1.reynoldsNumber);
+	}
+	
+	static void testCondenser(){
+		FluidH2O fluid = new FluidH2O();
+		fluid.setPressure(8000).setQuality(0.98).setMassFlow(25);
+		
+		FluidH2O exchangeFluid = new FluidH2O();
+		exchangeFluid.setTemperature(25+273.15).setPressure(101325).setMassFlow(1);
+		
+		Condenser condenser = new Condenser(fluid);
+		condenser.setExchageFluidIn(exchangeFluid);
+		condenser.getExchangeFluidOut().setTemperature(35+273.15).setPressure(101325);
+		
+		condenser.solve();
+		
+		System.out.println(condenser.getWorkingFluidOutput().getTemperature());
 	}
 	
 	static void testNusselt(){

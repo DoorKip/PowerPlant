@@ -50,6 +50,7 @@ public class Condenser extends LiquidHeatExchanger{
 		tubeLayout = TubeLayout.SQUARE;
 	}
 	
+	@Override
 	public void solve(){
 		if(massFlow == 0){calcMassFlow();}
 		calcPressure();
@@ -86,6 +87,14 @@ public class Condenser extends LiquidHeatExchanger{
 		double hWFOut = workingFluidOutput.getSpecificEnthalpy();
 		if (hEFIn != 0 && hEFOut == 0 && hWFIn != 0 && hWFOut == 0 && workingFluidInput.getRegion() != 0){
 			try{
+				Fluid enthalpyTest = workingFluidInput.getClass().newInstance().setQuality(0).setPressure(workingFluidInput.getPressure());
+				workingFluidOutput.setSpecificEnthalpy(enthalpyTest.getSpecificEnthalpy()).setPressure(workingFluidInput.getPressure());
+				exchangeFluidOutput.setSpecificEnthalpy(hEFIn + (hWFIn - enthalpyTest.getSpecificEnthalpy()));
+				return true;
+			} catch (IllegalAccessException | InstantiationException e){throw new Error("YOU FUCKING BROKE IT, DOG.");}
+		} else if (hEFIn != 0 && hEFOut != 0 && hWFIn != 0 && hWFOut == 0 && workingFluidInput.getRegion() != 0){
+			try{
+				//TODO Fix condenser code for known exchange fluid scenario.
 				Fluid enthalpyTest = workingFluidInput.getClass().newInstance().setQuality(0).setPressure(workingFluidInput.getPressure());
 				workingFluidOutput.setSpecificEnthalpy(enthalpyTest.getSpecificEnthalpy()).setPressure(workingFluidInput.getPressure());
 				exchangeFluidOutput.setSpecificEnthalpy(hEFIn + (hWFIn - enthalpyTest.getSpecificEnthalpy()));

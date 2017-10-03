@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 DoorKip
+ * Copyright (C) 2014 DoorKip
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package powerplant;
+package powerplant.units;
 
 /**
- *
+ * This will serve as a collection of static methods for unit setup that would not fit well in another class.
  * @author DoorKip
  */
 public class Units {
-	public static double ft_meter(double ft){
-		return ft*0.3048;
-	}
-	public static double inch_meter(double inch){
-		return (inch/12.0)*0.3048;
-	}
-	public static double kPa_Pa(double pressure){
-		return (pressure/1000);
-	}
+	
 }
