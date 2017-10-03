@@ -23,13 +23,24 @@ package powerplant;
  */
 public class EngineeringMath {
 	/**
-	 * An implementation of the Haaland Friction Factor Equation to solve for the Darcy-Weisbach friction factor.
+	 * An implementation of the Haaland Friction Factor Equation to solve
+         * for the Darcy-Weisbach friction factor.
 	 * @param reynoldsNumber
-	 * @param relativeRoughness The mean surface roughness for the pipe.
+	 * @param relativeRoughness The mean surface roughness for the
+         * fluid-solid interface.
 	 * @return The friction factor
 	 */
-	public static double haalandEquation(double reynoldsNumber, double relativeRoughness){
-		double frictionFactor = Math.pow(1/(-1.8 * Math.log10( Math.pow(relativeRoughness/3.7 , 1.11) + 6.9/reynoldsNumber)), 2);
+	public static double haalandEquation(
+                double reynoldsNumber, 
+                double relativeRoughness
+        )
+        {
+		double frictionFactor = Math.pow(
+                        1/(-1.8 * Math.log10( 
+                                Math.pow(relativeRoughness/3.7 , 1.11) 
+                                + 6.9/reynoldsNumber
+                        )), 2
+                );
 		return frictionFactor;
 	}
 	public static double averageAND(double a, double b){
@@ -39,6 +50,6 @@ public class EngineeringMath {
 		else return 0;
 	}
 	
-	//TODO Implement Serghide's Equation to test it against Haaland's
+	//TODO kkkkkkkk
 	
 }
