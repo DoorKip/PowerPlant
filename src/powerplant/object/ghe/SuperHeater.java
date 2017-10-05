@@ -55,18 +55,28 @@ public class SuperHeater extends GasHeatExchanger{
 			actualTransversePitch = width/(transverseTubes);
 		}else{return false;}
 		double massFlowPerBank = massFlow/transverseTubes;
-		double reynoldsNumber = (4*massFlowPerBank) / (Math.PI * workingFluidInput.getDynamicViscosity() * innerDiameter);
+		double reynoldsNumber = (4*massFlowPerBank)
+                        / (Math.PI * workingFluidInput.getDynamicViscosity() * innerDiameter);
 		double frictionFactor = 0;
 		if( reynoldsNumber < 2300 ){
 			frictionFactor = 64/reynoldsNumber;
 		} else if( reynoldsNumber > 4000 ){
-			frictionFactor = Math.pow(1.58 * Math.log(reynoldsNumber) - 3.28, -2); //Smooth pipe, turbulent flow
+			frictionFactor = Math.pow(
+                                1.58 * Math.log(reynoldsNumber) - 3.28, -2
+                        ); //Smooth pipe, turbulent flow
 		}
 		double nusseltNumber;
 		try{
 			Fluid testFluid = workingFluidInput.getClass().newInstance();
-			testFluid.setTemperature(EngineeringMath.averageAND(workingFluidInput.getTemperature(), workingFluidOutput.getTemperature())).setPressure(workingFluidInput.getPressure());
-			nusseltNumber = ((frictionFactor/2)*reynoldsNumber*testFluid.getPrandtl())/(1.07+12.7*Math.sqrt(frictionFactor/2)*(Math.pow(testFluid.getPrandtl(),(2.0/3.0))-1));
+			testFluid.setTemperature(
+                                EngineeringMath.averageAND(
+                                        workingFluidInput.getTemperature(),
+                                        workingFluidOutput.getTemperature()
+                                )
+                        ).setPressure(workingFluidInput.getPressure());
+			nusseltNumber = 
+                                ((frictionFactor/2)*reynoldsNumber*testFluid.getPrandtl())
+                                /(1.07+12.7*Math.sqrt(frictionFactor/2)*(Math.pow(testFluid.getPrandtl(),(2.0/3.0))-1));
 		}
 		catch(InstantiationException | IllegalAccessException e){return false;}
 		
@@ -103,10 +113,22 @@ public class SuperHeater extends GasHeatExchanger{
 		return this;
 	}
 	
-	public WorkingFluidObject setWidth(double width){this.width = width; return this;}
-	public WorkingFluidObject setHeight(double height){this.height = height; return this;}
-	public WorkingFluidObject setDepth(double depth){this.depth = depth; return this;}
-	public WorkingFluidObject setMinimumPitch(double minimumPitch){this.minimumPitch = minimumPitch; return this;}
+	public WorkingFluidObject setWidth(double width){
+            this.width = width;
+            return this;
+        }
+	public WorkingFluidObject setHeight(double height){
+            this.height = height;
+            return this;
+        }
+	public WorkingFluidObject setDepth(double depth){
+            this.depth = depth;
+            return this;
+        }
+	public WorkingFluidObject setMinimumPitch(double minimumPitch){
+            this.minimumPitch = minimumPitch;
+            return this;
+        }
 
 	@Override
 	public Fluid getWorkingFluidInput() {

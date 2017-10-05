@@ -19,7 +19,6 @@ package powerplant;
 
 import powerplant.fluid.Fluid;
 import powerplant.fluid.FluidH2O;
-import net.sf.jsteam.*;
 import powerplant.object.*;
 import powerplant.object.ghe.*;
 import powerplant.object.lhe.*;
@@ -39,8 +38,8 @@ public class PowerPlant {
 		//testCycle();
 		//System.out.println(EngineeringMath.haalandEquation(320000, 0.00015/0.315));
 		//testPipe();
-		//testTurbine();
-		testCondenser();
+		testTurbine();
+		//testCondenser();
 	}
 	
 	static void testSteam(){
@@ -191,10 +190,3 @@ public class PowerPlant {
 		System.out.println(pipe1.getPressureLoss());
 	}
 }
-
-/* Things that will require guesses
-Condenser
-- Number of passes
-- Transverse number of tubes
--
-*/
